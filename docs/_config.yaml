@@ -1,0 +1,14 @@
+title: Investment Return Calculator
+description: Calculate average rate of return on an investment
+theme: minima
+
+plugins:
+  - jekyll-github-metadata
+
+github:
+  is_project_page: true
+
+keywords:
+  - internal rate of return
+  - annual rate of return
+  - investment
