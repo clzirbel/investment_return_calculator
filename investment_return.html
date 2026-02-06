@@ -1,0 +1,371 @@
+<html>
+<head>
+<title>Investment return calculator</title>
+<script type="text/javascript">
+
+function setexample1(form)
+{
+  form.data.value = "2/14/1994\t1000.00\n2/14/1995\t0\t1100\n2/14/1996\t200\t1400\n8/14/1996\t0.00\t1500.00";
+  document.getElementById('singleseries').checked = true;
+  calculatereturn(form);
+}
+
+function setexample2(form)
+{
+  form.data.value = "2/14/1994\t1000.00\t1000.00\n12/6/2001\t500\t1800\n6/19/2012\t0.00\t3000.00\n4/4/2003\t200";
+  document.getElementById('singleseries').checked = true;
+  calculatereturn(form);
+}
+
+function setexample3(form)
+{
+  form.data.value = "01 May 2003;1000\n01 May 2004;0;1500";
+  document.getElementById('singleseries').checked = true;
+  calculatereturn(form);
+}
+
+function setexample4(form)
+{
+  form.data.value = "2/5/2012\t20000\t\tInvestment in ABC Co.\n";
+  form.data.value += "4/5/2012\t-21500\t0\tSold all of ABC Co., balance is now 0\n";
+  form.data.value += "6/17/2012\t10000\t\tInvestment in XYZ Co.\n";
+  form.data.value += "7/27/2012\t-10750\t0\tSold all of XYZ Co., balance is now 0\n";
+  form.data.value += "7/20/2012\t15000\t\tInvestment in BIG Co.\n";
+  form.data.value += "8/3/2012\t-14600\t0\tSold all of BIG Co. at a loss\n";
+  document.getElementById('multiple').checked = true;
+  calculatereturn(form);
+}
+
+function clearform(form)
+{
+  form.data.value = "";
+  form.analysis.value = "";
+  form.message.value = "";
+}
+
+function round(x,d)
+{
+  switch (d)
+  {
+    case 0:  return Math.round(x);
+    case 1:  return Math.round(x * 10) / 10;
+    case 2:  return Math.round(x * 100) / 100;
+    case 3:  return Math.round(x * 1000) / 1000;
+    case 4:  return Math.round(x * 10000) / 10000;
+  }
+}
+
+function calculatebalance(date,investment,beginbalance,rate,lastdate,firstdata,lastdata) {
+  // calculate the ending balance with the given record of investments
+  // and the given interest rate
+
+  if (isNaN(beginbalance)) {
+    total = 0;
+    for (j=firstdata; j <= lastdata; j++)
+      total += investment[j] * Math.pow(1+rate,lastdate-date[j]);
+  } else {
+    total = beginbalance * Math.pow(1+rate,lastdate-date[firstdata]);
+    for (j=firstdata+1; j <= lastdata; j++)
+      total += investment[j] * Math.pow(1+rate,lastdate-date[j]);
+  }
+  return total;
+}
+
+function findreturn(date,investment,beginbalance,endbalance,lastdate,firstdata,lastdata) {
+  // what the balance would be with a rate of 0
+  newbalance = calculatebalance(date,investment,beginbalance,0,lastdate,firstdata,lastdata);
+
+  // rates are multiplied by 100 before they are displayed; 1 is large
+  var lowrate = 0.0;
+  var highrate = 0.0;
+  var lowestrate = -0.9999999;  // almost losing 100% a year
+  var highestrate = 9999999;
+
+  if (newbalance > endbalance) {
+    // rate needs to be negative, bracket it
+    while (newbalance > endbalance && lowrate > lowestrate) {
+      highrate = lowrate;
+      lowrate = lowrate - 0.1;
+      if (lowrate < lowestrate) {
+        lowrate = lowestrate;
+        highrate = -0.9;
+      }
+      // what the balance would be with the current lowrate
+      newbalance = calculatebalance(date,investment,beginbalance,lowrate,lastdate,firstdata,lastdata);
+      // console.log(lowrate,highrate,newbalance);
+    }
+  } else {
+    while (newbalance < endbalance && highrate < highestrate) {
+      lowrate = highrate;
+      highrate = 2 * highrate + 0.2;
+      newbalance = calculatebalance(date,investment,beginbalance,highrate,lastdate,firstdata,lastdata);
+    }
+  }
+
+  if (highrate > highestrate) {
+    // growth rate too high, may not be able to capture it accurately
+    return 100*highestrate + 99;
+  } else {
+    // binary search for correct rate
+    var newrate = 0;
+    while (highrate - lowrate > 0.0000001) {
+      newrate  = (highrate + lowrate)/2;
+      newbalance = calculatebalance(date,investment,beginbalance,newrate,lastdate,firstdata,lastdata);
+
+      if (newbalance > endbalance)
+        highrate = newrate;
+      else
+        lowrate = newrate;
+    }
+  }
+  return 100*newrate;
+}
+
+function calculatereturn(form)
+{
+  inputdata = form.data.value;
+  var datalines = inputdata.split('\n');
+  var data = [];
+
+  form.message.value = "";
+
+  for (j=0; j < datalines.length; j++)  {
+
+    currentline = datalines[j];
+
+    currentline = currentline.replace(/\$/g,"");  // remove all dollar signs
+    currentline = currentline.replace(/,\s+/g," ");  // replace all commas with spaces with spaces
+    currentline = currentline.trim();
+
+    if ((currentline.indexOf(' ') > -1) || (currentline.indexOf(';') > -1) || (currentline.indexOf('\t') > -1))           //
+      currentline = currentline.replace(/,/g,"");  // remove all commas
+
+    if (currentline.indexOf(';') > -1)
+      currentline = currentline.split(';');
+    else if (currentline.indexOf('\t') > -1)
+      currentline = currentline.split('\t');
+    else
+      currentline = currentline.split(/\s+/);  // split on space character(s)
+
+    factor = 1/(365.25*24*60*60*1000);
+    milli = Date.parse(currentline[0]);       // date in milliseconds
+    date = milli * factor;                    // convert milliseconds to years
+    investment = parseFloat(currentline[1]);
+    if (currentline.length > 2)
+      balance = parseFloat(currentline[2]);
+    else
+      balance = NaN;
+
+    thisrow = [date, investment, balance, milli];
+    if (!isNaN(date))
+      data.push(thisrow);
+  }
+
+  var date       = new Array(data.length);  // date in years
+  var milli      = new Array(data.length);  // date in milliseconds
+  var investment = new Array(data.length);
+  var balance    = new Array(data.length);
+  var rate       = new Array(data.length);
+  var ratesince  = new Array(data.length);
+
+  synchronizezeros = 0;
+
+  if (document.getElementById('singleseries').checked)
+    synchronizezeros = 0;
+  else if (document.getElementById('multiple').checked)
+    synchronizezeros = 1;
+  else
+    document.getElementById('singleseries').checked = true;
+
+  newdata = data;
+
+  const t0 = performance.now();
+
+  if (synchronizezeros == 1) {
+    var outputdata = "Date (YYYY/MM/DD)\tDays held\tInvestment\tBalance\tRate\n";
+    var endbalance = 0;
+    var elapsed    = new Array(data.length);
+    init = 0;                            // first investment in current series
+    for (i=0; i < data.length; i++) {
+      date[i]       = newdata[i][0];
+      investment[i] = newdata[i][1];
+      balance[i]    = newdata[i][2];
+      milli[i]      = newdata[i][3];
+
+      if (balance[i] == 0) {
+        rate[i] = findreturn(date,investment,NaN,balance[i],date[i],init,i);
+        endbalance -= investment[i];
+        investment[i] = 0;
+        for (j=init; j <= i; j++)
+          elapsed[j] = date[j] - date[i];
+        init = i + 1;
+      }
+      else
+        rate[i] = NaN;
+    }
+
+    for (i=0; i < data.length; i++) {
+      if (isNaN(balance[i])) {
+        ratestring = "";
+        balancestring = "";
+      } else {
+        ratestring = Math.round (rate[i]*10000) / 10000 + "%";
+        balancestring = balance[i].toString();
+      }
+      var thedate   = new Date(milli[i]);
+      var yyyy = thedate.getFullYear().toString();
+      var mm = (thedate.getMonth()+1).toString(); // getMonth() is zero-based
+      var dd  = thedate.getDate().toString();
+      datestring = yyyy + "/" + (mm[1]?mm:"0"+mm[0]) + "/" + (dd[1]?dd:"0"+dd[0]);
+
+      outputdata += datestring + "\t" + round(elapsed[i]/(-24*60*60*1000),0) + "\t" + investment[i] + "\t" + balancestring + "\t" + ratestring + "\n";
+    }
+
+    overallrate = findreturn(elapsed,investment,NaN,endbalance,0,0,data.length-1);
+
+    investedcurrent = 0;
+    investedyears = 0;
+    gain = 0;
+    investmenttotal = 0;
+    investmentcount = 0;
+
+    for (i=0; i < data.length; i++) {
+      date[i]       = newdata[i][0];
+      investment[i] = newdata[i][1];
+      balance[i]    = newdata[i][2];
+
+      if (investment[i] > 0) {
+        investedcurrent += investment[i];           // money invested
+        interval = date[i+1] - date[i];
+        investedyears += investedcurrent * interval;
+        investmenttotal += investment[i];
+        investmentcount += 1;
+      } else {
+        if (balance[i] == 0)                      // investment closed
+        {
+          gain -= investedcurrent + investment[i];
+          investedcurrent = 0;
+        }
+        else                                      // money withdrawn
+        {
+          investedcurrent -= investment[i];
+          interval = date[i+1] - date[i];
+          investedyears += investedcurrent * interval;
+        }
+      }
+    }
+
+    sortdata = data.sort( function(row1, row2) {
+        var k1 = row1[0];
+        var k2 = row2[0];
+        return (k1 > k2) ? 1 : ( (k2 > k1) ? -1 : 0 );
+      } );
+
+    // use sortdata to figure out the maximum amount invested, time duration
+
+    totalyears = sortdata[sortdata.length-1][0]-sortdata[0][0];
+
+    invested = 0;
+    maxinvested = 0;
+
+    for (i=0; i < data.length; i++) {
+      invested += sortdata[i][1];
+      if (invested > maxinvested)
+        maxinvested = invested;
+    }
+
+    averageinvested = investedyears / totalyears;
+    averageinvestment = investmenttotal / investmentcount;
+
+    form.message.value += "Average annual rate of return is " + Math.round(overallrate*10000) / 10000 + "%\n";
+    form.message.value += "Total years                  " + round(totalyears,2) + "\n";
+    form.message.value += "Total gain                   " + round(gain,2) + "\n";
+    form.message.value += "Average invested             " + round(investedyears / totalyears,2) + "\n";
+    form.message.value += "Return on average invested   " + round(100 * Math.log(1+gain/averageinvested) / totalyears,4) + "%\n";
+    form.message.value += "Average investment size      " + round(averageinvestment,2) + "\n";
+    form.message.value += "Return on average investment " + round(100 * Math.log(1+gain/averageinvestment) / totalyears,4) + "%\n";
+    form.message.value += "Maximum invested             " + round(maxinvested,2) + "\n";
+    form.message.value += "Return on maximum invested   " + round(100 * Math.log(1+gain/maxinvested) / totalyears,4) + "%\n";
+  } else {
+    var outputdata = "Date (YYYY/MM/DD)\tInvestment\tBalance\tRate\tRate since\n";
+
+    newdata = data.sort( function(row1, row2) {
+      var k1 = row1[0];
+      var k2 = row2[0];
+      return (k1 > k2) ? 1 : ( (k2 > k1) ? -1 : 0 );
+    } );
+
+    for (i=0; i < data.length; i++) {
+      date[i]       = newdata[i][0];
+      investment[i] = newdata[i][1];
+      balance[i]    = newdata[i][2];
+      milli[i]      = newdata[i][3];
+    }
+
+    for (i=0; i < data.length; i++) {
+      if (isNaN(balance[i])) {
+        rate[i] = NaN;
+        ratesince[i] = NaN;
+        ratestring = "";
+        ratesincestring = "";
+        balancestring = "";
+      } else {
+        rate[i] = findreturn(date,investment,balance[0],balance[i],date[i],0,i);
+        ratestring = Math.round (rate[i]*10000) / 10000 + "%";
+        ratesince[i] = findreturn(date,investment,balance[i],balance[data.length-1],date[data.length-1],i,data.length-1);
+        ratesincestring = Math.round (ratesince[i]*10000) / 10000 + "%";
+        balancestring = balance[i].toString();
+      }
+      var thedate   = new Date(milli[i]);
+      var yyyy = thedate.getFullYear().toString();
+      var mm = (thedate.getMonth()+1).toString(); // getMonth() is zero-based
+      var dd  = thedate.getDate().toString();
+      datestring = yyyy + "/" + (mm[1]?mm:"0"+mm[0]) + "/" + (dd[1]?dd:"0"+dd[0]);
+
+      outputdata += datestring + "\t" + investment[i] + "\t" + balancestring + "\t" + ratestring + "\t" + ratesincestring + "\n";
+    }
+  }
+
+  const t1 = performance.now();
+  // console.log(`Elapsed time: ${(t1 - t0).toFixed(3)} ms`);
+
+  form.analysis.value = outputdata;
+}
+
+</script>
+</head>
+<body>
+<h1>Investment return calculator</h1>
+This page calculates a single rate of return for a series of investments, as an annual percentage rate.
+You can think of this as the average rate of return; it is also known as the internal rate of return, or IRR.
+<p>
+Input data in this format:
+<br>Column 1, date in MM/DD/YYYY or YYYY/MM/DD or DD Month YYYY format
+<br>Column 2, dollar amount invested (positive) or sold (negative)
+<br>Column 3, balance as of that date
+<br>Note that if you have the balance as of a current date, you can put it in with investment value 0.
+<br>Note that not every row needs an entry in column 3.  The rate of return will only be calculated for dates for which the balance is entered.
+<br>Note that entries on each row should all be separated by tabs (as when copied from a spreadsheet) or by semicolons or by spaces if the date has no space.
+Don't mix separators within a single line.
+<br>Dollar signs and commas will be stripped out.
+<form name=form>
+<div align="left">
+<p><textarea name="data" cols = 80 rows =10></textarea>
+<br>
+<input type="radio" name="investtype" id="singleseries" value="Single investment over time" />Single investment over time
+<input type="radio" name="investtype" id="multiple" value="Multiple closeouts" />Multiple closeouts
+<br>
+<input type=button value="Calculate" onClick="calculatereturn(this.form)" name="button">
+<input type=button value="Example 1" onClick="setexample1(this.form)" name="button">
+<input type=button value="Example 2" onClick="setexample2(this.form)" name="button">
+<input type=button value="Example 3" onClick="setexample3(this.form)" name="button">
+<input type=button value="Example 4" onClick="setexample4(this.form)" name="button">
+<input type=button value="Clear" onClick="clearform(this.form)" name="button">
+<p><textarea name="analysis" cols=80 rows=10></textarea>
+<p><textarea name="message" cols=80 rows=6></textarea>
+</div>
+</form>
+<p>
+Disclaimer:  This analysis is for illustration only and does not constitute investment advice.
+</body>
+</html>
