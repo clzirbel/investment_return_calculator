@@ -3,4 +3,6 @@ Calculate the internal rate of return (IRR) on an investment from a column of da
 
 The [project website](docs/index.md) shows examples, explains the data input format, and explains the output format.
 
-
+# Credits
+- Craig L. Zirbel conceived of the investment return calculator, designed the input and output formats, and wrote the JavaScript code that does the calculations.
+- VS-Code Chat helped to set up the GitHub page.
