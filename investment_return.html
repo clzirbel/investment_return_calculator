@@ -12,7 +12,7 @@ function setexample1(form)
 
 function setexample2(form)
 {
-  form.data.value = "2/14/1994\t1000.00\t1000.00\n12/6/2001\t500\t1800\n6/19/2012\t0.00\t3000.00\n4/4/2003\t200";
+  form.data.value = "1994/2/14\t1000.00\t1000.00\n2001/12/6\t500\t1800\n2012/6/19\t0.00\t3000.00\n2003/04/4\t200";
   document.getElementById('singleseries').checked = true;
   calculatereturn(form);
 }
@@ -182,7 +182,7 @@ function calculatereturn(form)
   const t0 = performance.now();
 
   if (synchronizezeros == 1) {
-    var outputdata = "Date (YYYY/MM/DD)\tDays held\tInvestment\tBalance\tRate\n";
+    var outputdata = "Date\tDays held\tInvestment\tBalance\tRate\n";
     var endbalance = 0;
     var elapsed    = new Array(data.length);
     init = 0;                            // first investment in current series
@@ -287,7 +287,7 @@ function calculatereturn(form)
     form.message.value += "Maximum invested             " + round(maxinvested,2) + "\n";
     form.message.value += "Return on maximum invested   " + round(100 * Math.log(1+gain/maxinvested) / totalyears,4) + "%\n";
   } else {
-    var outputdata = "Date (YYYY/MM/DD)\tInvestment\tBalance\tRate\tRate since\n";
+    var outputdata = "Date\tInvestment\tBalance\tRate to\tRate since\n";
 
     newdata = data.sort( function(row1, row2) {
       var k1 = row1[0];
@@ -336,18 +336,31 @@ function calculatereturn(form)
 </head>
 <body>
 <h1>Investment return calculator</h1>
-This page calculates a single rate of return for a series of investments, as an annual percentage rate.
-You can think of this as the average rate of return; it is also known as the internal rate of return, or IRR.
+This page calculates an average rate of return for one or more investments, as an annual percentage rate.
+The average rate of return calculated here is also known as the <i>internal rate of return.</i>
+All calculations are done on your computer in your browser; no data is sent to the internet.
+<a href="https://clzirbel.github.io/investment_return_calculator/" target="_blank">Full instructions for using the calculator</a> are available on my GitHub site.
 <p>
-Input data in this format:
-<br>Column 1, date in MM/DD/YYYY or YYYY/MM/DD or DD Month YYYY format
-<br>Column 2, dollar amount invested (positive) or sold (negative)
-<br>Column 3, balance as of that date
-<br>Note that if you have the balance as of a current date, you can put it in with investment value 0.
-<br>Note that not every row needs an entry in column 3.  The rate of return will only be calculated for dates for which the balance is entered.
-<br>Note that entries on each row should all be separated by tabs (as when copied from a spreadsheet) or by semicolons or by spaces if the date has no space.
+For multiple investments in the same thing, like contributions to an IRA over many years, copy and paste data into the first box below in this format:
+<ul>
+<li>Column 1, date in MM/DD/YYYY or YYYY/MM/DD or DD Month YYYY format.  Every line needs a date.
+<li>Column 2, dollar amount invested (positive) or sold (negative).  All money in and out must be included, with a date!
+<li>Column 3, balance as of that date.  Not every line needs a balance.
+</ul>
+If you have the balance on some date that you did not invest, you can put it in with investment amount 0.
+Entries on each row should all be separated by tabs (as when copied from a spreadsheet) or by semicolons or by spaces if the date has no space.
 Don't mix separators within a single line.
-<br>Dollar signs and commas will be stripped out.
+Dollar signs and commas will be stripped out from the input.
+Examples 1, 2, 3 show how this works.
+
+<p>
+Click the Calculate button, and results will appear in the second box.
+Suggestion: click in the box, select all (Ctrl-A), copy (Ctrl-C), and paste (Ctrl-V) into a spreadsheet.
+Results have five columns.
+The first three columns of the results are the same as the input.
+The fourth column ("Rate to") shows the average rate of return from the first date to the date on each row.
+The fifth column ("Rate since") shows the average rate of return from the date on the row to the last date.
+The rate of return will only be calculated for dates with a balance.
 <form name=form>
 <div align="left">
 <p><textarea name="data" cols = 80 rows =10></textarea>
@@ -361,11 +374,12 @@ Don't mix separators within a single line.
 <input type=button value="Example 3" onClick="setexample3(this.form)" name="button">
 <input type=button value="Example 4" onClick="setexample4(this.form)" name="button">
 <input type=button value="Clear" onClick="clearform(this.form)" name="button">
-<p><textarea name="analysis" cols=80 rows=10></textarea>
+<p><textarea name="analysis" cols=80 rows=10 font-family: monospace;></textarea>
 <p><textarea name="message" cols=80 rows=6></textarea>
 </div>
 </form>
 <p>
 Disclaimer:  This analysis is for illustration only and does not constitute investment advice.
+<br>Copyright 2026 Craig L. Zirbel
 </body>
 </html>
