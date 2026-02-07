@@ -4,6 +4,9 @@ title: Investment Return Calculator
 toc: true
 ---
 
+* TOC
+{:toc}
+
 # Investment Return Calculator
 It's good to save money for the future, but it can be hard to tell how well your investment choices are working out when you make many contributions over a long period of time.
 You can often find the rate of return for a mutual fund or savings account over the last month, year, 3 years, 5 years, but those are generic numbers that are not aware of how much you invested and when.
