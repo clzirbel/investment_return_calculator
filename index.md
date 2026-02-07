@@ -1,3 +1,15 @@
+---
+layout: default
+---
+
+<nav>
+  <a href="#how_to_use">How to Use</a> |
+  <a href="#input_data">Input Data</a> |
+  <a href="#example">Example</a> |
+  <a href="#multiple_closeouts">Multiple Closeouts</a> |
+  <a href="https://github.com/clzirbel/investment_return_calculator">GitHub</a>
+</nav>
+
 # Investment Return Calculator
 It's good to save money for the future, but it can be hard to tell how well your investment choices are working out when you make many contributions over a long period of time.
 You can often find the rate of return for a mutual fund or savings account over the last month, year, 3 years, 5 years, but those are generic numbers that are not aware of how much you invested and when.
@@ -10,7 +22,7 @@ In fact, the Investment Return Calculator calculates a history of your rate of r
 You can enter the balance on whatever day you happen to look it up, not only on dates when you invest money.
 Some investment accounts you may put money it and take it out, and the Investment Return Calculator can still tell your average rate of return.
 
-## How to Use
+## How to Use <a id="how_to_use"></a>
 
 You can use the Investment Return Calculator in two ways:
 
@@ -22,15 +34,14 @@ No data is transmitted or stored anywhere.
 You can disconnect from the internet and verify that it still works.
 
 ### Download the calculator and run it locally
-[Download the calculator (HTML file)](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return_calculator.html?download=1)
-[Download the calculator (HTML file)](https://github.com/clzirbel/investment_return_calculator/raw/main/investment_return_calculator.html?download=1)
-[Download the investment_return.html file](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return_calculator.html) to your computer and save it.
-You can then open it in any web browser at any time by clicking on the file; you do not need to be connected to the internet.
+Right click the link above and Save As ... to save the file as investment_return_calculator.html on your computer.
+Put it where it is easy to find, like in the same folder where you track your investments.
+You can then open it in a web browser by double clicking on the file; you do not need to be connected to the internet.
 Since the calculator runs entirely in your browser, your financial information is never transmitted anywhere—it stays completely private on your device.
 
 Both methods offer the same functionality with complete privacy and security. Your data is processed entirely on your computer with no external connections.
 
-## Input Data for a Single Investment Over Time
+## Input Data for a Single Investment Over Time <a id="input_data"></a>
 
 For multiple investments in the same thing over time, like contributions to an IRA over many years, copy and paste data into the first box below in this format:
 
