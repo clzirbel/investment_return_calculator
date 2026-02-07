@@ -15,13 +15,15 @@ Some investment accounts you may put money it and take it out, and the Investmen
 You can use the Investment Return Calculator in two ways:
 
 ### Run it in your browser
-[Open the calculator in your browser](https://clzirbel.github.io/investment_return_calculator/investment_return.html) to start calculating right away.
+[Open the calculator in your browser](https://clzirbel.github.io/investment_return_calculator/investment_return_calculator.html) to start calculating right away.
 Your browser fetches the calculator as a web page and runs the calculation in memory on your computer.
 Your financial data never leaves your computer—it exists only in your browser's memory while you're using it.
 No data is transmitted or stored anywhere.
 You can disconnect from the internet and verify that it still works.
 
 ### Download the calculator and run it locally
+[Download the calculator (HTML file)](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return_calculator.html)
+[Download the calculator (HTML file)](https://github.com/clzirbel/investment_return_calculator/raw/main/investment_return_calculator.html?download=1)
 [Download the investment_return.html file](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return.html) to your computer and save it.
 You can then open it in any web browser at any time by clicking on the file; you do not need to be connected to the internet.
 Since the calculator runs entirely in your browser, your financial information is never transmitted anywhere—it stays completely private on your device.
