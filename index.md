@@ -2,7 +2,7 @@
 layout: default
 title: Investment Return Calculator
 toc: true
-------
+---
 
 # Investment Return Calculator
 It's good to save money for the future, but it can be hard to tell how well your investment choices are working out when you make many contributions over a long period of time.
@@ -16,7 +16,7 @@ In fact, the Investment Return Calculator calculates a history of your rate of r
 You can enter the balance on whatever day you happen to look it up, not only on dates when you invest money.
 Some investment accounts you may put money it and take it out, and the Investment Return Calculator can still tell your average rate of return.
 
-## How to Use <a id="how_to_use"></a>
+## How to Use
 
 You can use the Investment Return Calculator in two ways:
 
@@ -35,7 +35,7 @@ Since the calculator runs entirely in your browser, your financial information i
 
 Both methods offer the same functionality with complete privacy and security. Your data is processed entirely on your computer with no external connections.
 
-## Input Data for a Single Investment Over Time <a id="input_data"></a>
+## Input Data for a Single Investment Over Time
 
 For multiple investments in the same thing over time, like contributions to an IRA over many years, copy and paste data into the first box below in this format:
 
@@ -63,4 +63,6 @@ I started investing in an IRA with Pax World Fund in 1994.
 From 1994 to 2026, I made 31 investments of various amounts, and kept track of the dates that I invested, the amount I invested on each date, and the balance on that date, when I could, and on other dates that I happened to check to balance.
 To make this example, I set all of the investment amounts to $1,000 and adjusted the balances to reflect the actual earning and losses of Pax World Fund.
 The investment performance is exactly the same as what I experienced, but the dollar amounts are modified so I could use it as a public example.
-You can see the data and the analysis of the Investment Return Calculator in the [spreadsheet I uploaded]
+You can see the data and the analysis of the Investment Return Calculator in the [spreadsheet I uploaded](assets/example.xlsx)
+
+<img src="assets/example1.png" alt="Example screenshot" style="max-width:100%; height:auto;">
