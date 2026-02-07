@@ -1,14 +1,8 @@
 ---
 layout: default
----
-
-<nav>
-  <a href="#how_to_use">How to Use</a> |
-  <a href="#input_data">Input Data</a> |
-  <a href="#example">Example</a> |
-  <a href="#multiple_closeouts">Multiple Closeouts</a> |
-  <a href="https://github.com/clzirbel/investment_return_calculator">GitHub</a>
-</nav>
+title: Investment Return Calculator
+toc: true
+------
 
 # Investment Return Calculator
 It's good to save money for the future, but it can be hard to tell how well your investment choices are working out when you make many contributions over a long period of time.
