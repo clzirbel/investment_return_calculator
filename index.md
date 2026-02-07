@@ -22,9 +22,9 @@ No data is transmitted or stored anywhere.
 You can disconnect from the internet and verify that it still works.
 
 ### Download the calculator and run it locally
-[Download the calculator (HTML file)](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return_calculator.html)
+[Download the calculator (HTML file)](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return_calculator.html?download=1)
 [Download the calculator (HTML file)](https://github.com/clzirbel/investment_return_calculator/raw/main/investment_return_calculator.html?download=1)
-[Download the investment_return.html file](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return.html) to your computer and save it.
+[Download the investment_return.html file](https://raw.githubusercontent.com/clzirbel/investment_return_calculator/main/investment_return_calculator.html) to your computer and save it.
 You can then open it in any web browser at any time by clicking on the file; you do not need to be connected to the internet.
 Since the calculator runs entirely in your browser, your financial information is never transmitted anywhere—it stays completely private on your device.
 
